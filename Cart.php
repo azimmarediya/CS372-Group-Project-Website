@@ -1,4 +1,122 @@
-<?php session_start();?>
+	<?php session_start();
+	$servername = "localhost";
+$username = "username";
+$password = "password";
+$dbname = "myDB";
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+$email = $_SESSION["email"];
+  
+$sql = "SELECT email FROM user WHERE email='$email';"; 
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+
+if(mysqli_num_rows($result)<1){
+mysqli_close($conn);
+ header('Location: Login.php');
+exit();
+} 
+?>
+<?php
+// This section of code checks for the users cart and provides information for later code
+// check for what the user has in their cart in the cart table by searching for any entries with their email.  
+  // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+    	die("Connection failed: " . $conn->connect_error);
+    }
+    
+$sql = "SELECT * FROM cart WHERE user='$email';";
+$result = $conn->query($sql);
+
+?>
+
+<?php
+
+// this section of php code handles deleting an object from the cart based on the hidden field in the table
+ $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+    	die("Connection failed: " . $conn->connect_error);
+    }
+
+if(isset($_POST["rcart"])){
+
+// get the name of the hidden fields
+$dproduct = $_POST["pname"];
+$dquantity = $_POST["pquantity"];
+
+// delete the row with that product name
+$sql = "DELETE FROM cart WHERE ProductTitle='$dproduct';";
+
+
+if($conn->query($sql)===TRUE){
+//echo "Product removed from cart";
+ header('Location: Cart.php');
+
+
+
+
+// This code is used to find the amount of stock for the item selected
+$sqlcheck = "SELECT Quantity FROM Product WHERE ProductTitle='$dproduct';";
+$qcheck = $conn->query($sqlcheck);
+$qrow = $qcheck->fetch_assoc();
+$qres = $qrow["Quantity"];
+
+//adjust the quantity in the table 
+$updateq = $qres + $dquantity;
+
+
+
+$altersql = "UPDATE Product SET Quantity='$updateq' WHERE ProductTitle='$dproduct';";
+
+$conn->query($altersql);
+
+}
+else{
+echo "error";
+}
+
+}
+
+$conn->close();
+
+?>
+
+<?php
+// This section assembles a string of the products and quantities for the finished transaction table.
+$productString = "";
+	
+ $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+    	die("Connection failed: " . $conn->connect_error);
+    }
+
+$get = "SELECT * FROM cart WHERE user = '$email';";
+$getResult = $conn->query($get);
+
+
+if($getResult->num_rows > 0){ 
+while($getRow=$getResult->fetch_assoc()){
+$title = $getRow["ProductTitle"];
+$quant = $getRow["Quantity"];
+
+$productString.=  $quant .= " ";
+$productString.= $title .= ",";
+
+	
+}
+}
+
+$productString = substr($productString, 0, -1);	
+
+
+$conn->close();
+
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,141 +126,116 @@
 </head>
 <body>
 <header class="login">
-<a href="HomePage.php"> Home Page    </a>  <a href="Profile.php"> Profile</a>
+<a href="HomePage.php"> Home Page    </a>  <a href="Logout.php"> Logout </a>
 </header>
 <header>
 <img src="NIP.jpg" alt="Treee" style = "display:inline" width = "150" height = "150" />
 <p id="titl"><font size="+20">Welcome to Nature in a Pocket (NIP)'s website</font></p>
 </header>
-  
-  <div class="search-container">
-    <form action="/action_page.php">
-      <input type="text" placeholder="Search..." name="search">
-      <button type="submit">Submit</button>
-    </form>    
-  </div> 
-<a href="Product.php"> Product list</a>
-<div class="vertical-menu">
-  <a href="#" class="active">Category</a>
-  <?php 		
-    // Create connection
-    $conn = new mysqli("localhost", "andriiev", "2006vA3", "andriiev");
-    // Check connection
-    if ($conn->connect_error) {
-    	die("Connection failed: " . $conn->connect_error);
-    }
-    
-    $sql = "SELECT Category FROM Categories";
-   
-
-		$result = $conn->query($sql);
-		
-		if ($result->num_rows > 0) {
-		   
-		    // output data of each row
-		    while($row = $result->fetch_assoc()) {
-		        echo "<a href='%'>" . $row["Category"]. "</a>";
-		    }
-		 
-		} else {
-		    echo "0 results";
-		}
-		
-		$conn->close();
-?>	
-</div>
 <div class="shopping-cart">
-  <!-- Title -->
-  <div class="title">
-    Shopping Cart
-  </div>
- 
-  <!-- Product #1 -->
-  <div class="item">
-    <div class="buttons">
-      <button onclick="Remt()"> Remove </button>   
-    </div>
- 
-    <div class="image">
-      <img src="CenCar.jpg" alt="" style = "display:inline" width = "50" height = "50" />
-    </div>
- 
-    <div class="description">
-      <span>Centrum</span>
-      <span>Vitamins</span>
-      <span>For heart</span>
-      
-    </div>
- 
-    <div class="quantity1">
-      
-      <input onclick ="bindInputs()" type="number" required="" min="1" max="99" class="form-control mr-sm-2 quantity" value="1" placeholder="Informe the quantity"/>
-       <span class="text-muted price">$19</span>
-    </div>
- 
-   
-  </div>
- 
-  <!-- Product #2 -->
-  <div class="item">
-    <div class="buttons">
-      <button onclick="Remt()"> Remove </button>   
-    </div>
- 
-    <div class="image">
-      <img src="CenMuMen.jpg" alt=""style = "display:inline" width = "30" height = "50"/>
-    </div>
- 
-    <div class="description">
-      <span>Centrum</span>
-      <span>Vitamins</span>
-      <span>for man</span>
-    </div>
- 
-    <div class="quantity1">
-      <input onclick ="bindInputs()" type="number" required="" min="1" max="99" class="form-control mr-sm-2 quantity" value="1" placeholder="Informe the quantity"/>
-      <span class="text-muted price">$20</span>
-    </div>
- 
-    
-  </div>
- 
-  <!-- Product #3 -->
-  <div class="item">
-    <div class="buttons">
-      <button onclick="Remt()"> Remove </button>     
-    </div>
- 
-    <div class="image">
-      <img src="CenMuWo.jpg" alt=""  style = "display:inline" width = "50" height = "50"/>
-    </div>
- 
-    <div class="description">
-      <span>Centrum</span>
-      <span>Vitamins</span>
-      <span>For Women</span>
-    </div>
- 
-    <div class="quantity1">
-     <input onclick ="bindInputs()" type="number" required="" min="1" max="99" class="form-control mr-sm-2 quantity" value="1" placeholder="Informe the quantity"/>
-     <span class="text-muted price">$20</span>
-    </div>
- 
-    
-      </div>   
-  
+<?php
+// this section of code finds and displays what the user has in their cart. it uses a button and a hidden field to delete items from the cart
+
+
+
+if ($result->num_rows > 0) {
+    // if yes, output the users cart
+	$subtotal = 0;
+	echo "<table> <tr> <td> Product Name </td> <td> Quantity </td> <td> Price Per Unit </td><td>Price for all </td></tr>";
+    while($row = $result->fetch_assoc()) {
+	// each row is a form with a hidden field that allows for the removal of a product from the cart
+	echo "<form method='post' action='Cart.php'>";
+
+	// display the product info
+        echo "<tr><td>" . $row["ProductTitle"] . "</td><td>" . $row["Quantity"] . "</td><td> " . $row["Price"]. "</td> ";
+// get the total price for that row
+	$rowprice = $row["Quantity"] * $row["Price"];
+	$subtotal = $subtotal + $rowprice;
+	echo "<td>" . $rowprice . "</td>";
+
+	echo "<td><input type='submit' value='remove from cart' name='rcart'></td>";
+	echo "<input type='hidden' value=\"$row[ProductTitle]\" name='pname'> </td> ";
+	echo "<td><input type='hidden' value=\"$row[Quantity]\" name='pquantity'></td></tr>";
+	echo "</form>";
+    }
+echo "</table><br>";
+echo "Subtotal: $" . $subtotal;
+
+echo "<form method='post' action='Cart.php'>";
+echo "<input type='submit' value='Confirm Purchase' name='purchase'>";
+echo "</form>";
+
+} else {
+    echo "No items in cart";
+}
+
+
+
+
+$conn->close();
+
+?>
+
+
+
 </div>
- <div class="col-12 col-sm-3 table-responsive" id="total"></div>
 
 
 
-<footer>
-		Validate <a href="https://validator.w3.org/nu/?doc=http%3A%2F%2Furegina.ca%2F~martinsp%2F" class = "ordinaryLink">HTML5</a>
-	</footer>
+</div>
+
 
 <footer> © Nature In a Pocket 2018 </footer>
-</body>
-<script type = "text/javascript"  src = "validation.js" ></script>
-<script>document.body.addEventListener("load", init(), false);</script> 
+
         
 </html>
+
+
+<?php
+
+// This section of code completes the transaction.  It needs to add the cart info to the transaction table, delete the users cart, and email notify the user of the transaction succeeding via email
+//if the user clicks purchase
+if(isset($_POST["purchase"])){
+ $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+
+//create an sql statement to put the information into the transaction table
+    $buy = "INSERT INTO transactions (user, Price, Description) VALUES ('$email', '$subtotal', '$productString');";
+
+    $buyResult = $conn->query($buy);
+    if($buyResult){
+    // if the user successfully finished the transaction, then delete the users cart and send them to a confirmation page.
+echo "success";
+$delete = "DELETE FROM cart WHERE user='$email'";
+// finish that part later
+$emptyResult = $conn->query($delete);
+
+// send email to user
+// the message
+//$msg = "First line of text\nSecond line of text";
+
+// use wordwrap() if lines are longer than 70 characters
+//$msg = wordwrap($msg,70);
+
+// send email
+//mail("blewedev@uregina.ca","My subject",$msg);
+// redirect
+
+header('Location: Confirm.php');
+
+
+}
+else {
+	echo "an unexpected error has occured.  Please try again later";
+}
+
+
+
+}
+
+$conn->close();
+?>
