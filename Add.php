@@ -1,13 +1,11 @@
 <?php  
-session_start();
-
 $servername = "localhost";
 $username = "username";
 $password = "password";
 $dbname = "myDB";
 
-
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+session_start();
+$conn = mysqli_connect("$servername", "$username", "$password", "$dbname");
 $email = $_SESSION["email"];
   
 $sql = "SELECT email FROM user WHERE email='$email';"; 
@@ -45,36 +43,36 @@ if (isset($_POST[addP])) {
 
 
  if (empty($_POST["productname"])) {
-    $productNameErr = "Product name is required";
+    $productNameErr = "Please enter a product name";
     $valid = false;
   } else {
     $productName = test_input($_POST["productname"]);
     // check if name only contains letters and whitespace
     if (!preg_match("/^[a-zA-Z ]*$/",$productName)) {
-      $productNameErr = "Only letters allowed"; 
+      $productNameErr = "Please only use letters"; 
       $valid = false; 
    }
   }
 
 if (empty($_POST["categoryname"])) {
-    $categoryNameErr = "Category name is required";
+    $categoryNameErr = "Please enter a category name";
     $valid = false;
   } else {
     $categoryName = test_input($_POST["categoryname"]);
     // check if name only contains letters and whitespace
     if (!preg_match("/^[a-zA-Z ]*$/",$categoryName)) {
-      $categoryNameErr = "Only letters allowed"; 
+      $categoryNameErr = "Please only use letters allowed"; 
       $valid = false; 
    }
   }
 
 if (empty($_POST["quantity"])) {
-    $quantityErr = "Quantity is required";
+    $quantityErr = "Please enter a quantity is required";
     $valid = false;
   } else {
  $quantity = test_input($_POST["quantity"]);
 if($_POST["quantity"] < 0){
-   $quantityErr = "Must enter a valid number for quantity";
+   $quantityErr = "Please enter a valid number for the quantity";
    $valid = false;
 }
 }
@@ -85,7 +83,7 @@ if (empty($_POST["price"])) {
   } else {
  $price = test_input($_POST["price"]);
 if($_POST["price"] < 0){
-   $priceErr = "Must enter a valid number";
+   $priceErr = "Please enter a valid number for the price";
    $valid = false;
 }
 }
@@ -137,6 +135,9 @@ header('Location:Admin.php');
 aside.form
 {
 background-color:lightgrey;
+}
+span.error{
+	color:red;
 }
 </style>
 </head>
