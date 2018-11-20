@@ -718,3 +718,8 @@ body {
     text-decoration: none;
     cursor: pointer;
 }
+
+/*  Registration page */
+span.error{
+	color:red;
+}
