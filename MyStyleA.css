@@ -1,36 +1,52 @@
 @charset "UTF-8";
-body{ background-color: white;}
+
 .login
 {
 	float: right;
-	background-color: yellow;
+	
    
+}
+th{
+color: #777;
 }
 #titl
 {
-	margin-top: 0px;
-	margin-left: 25%;
+text-align:center;
 }
 .vertical-menu {
     width: 200px;
+float:left;
 }
 
-.vertical-menu a {
-    background-color: #eee;
-    color: black;
-    display: block;
-    padding: 12px;
+.vertical-menu th {
+    background-color: lightgreen;
+    color: blue;
+    //display: block;
+   // padding: 12px;
     text-decoration: none;
+}
+.vertical-menu td{
+background-color:skyblue;
+}
+.vertical-menu input{
+background-color:skyblue;
+width:200px;
 }
 
 .vertical-menu a:hover {
     background-color: #ccc;
 }
 
-.vertical-menu a.active {
+.vertical-menu tr.active {
     background-color: #4CAF50;
     color: white;
 }
+tr.cat
+{
+background-color:skyblue;
+color:black;
+}
+
 .search-container{
   float: right;
   padding: 6px;
@@ -53,7 +69,7 @@ body{ background-color: white;}
 }
 
 section {
-	background-color: #ccc !important;
+	
 	padding: 20px;
 	margin-left: 15%;
 	margin-right: 20%;
@@ -77,18 +93,18 @@ section {
   width: 750px;
   height: 423px;
   margin: 80px auto;
-  background: #FFFFFF;
-  box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.10);
+ // background: skyblue;
+ 
   border-radius: 6px;
  
-  display: flex;
-  flex-direction: column;
+ 
+color:navy;
 }
 .title {
   height: 60px;
   border-bottom: 1px solid #E1E8EE;
   padding: 20px 30px;
-  color: #5E6977;
+  color: Light blue;
   font-size: 18px;
   font-weight: 400;
 }
@@ -146,7 +162,7 @@ section {
   margin-right: 50px;
 }
  
-Let’s add some basic style to  product name and description.
+Letâ€™s add some basic style to  product name and description.
 .description {
   padding-top: 10px;
   margin-right: 60px;
@@ -249,7 +265,7 @@ input:focus {
   width: 750px;
   height: 423px;
   margin: 80px auto;
-  background: #FFFFFF;
+ // background: #FFFFFF;
   box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.10);
   border-radius: 6px;
 
@@ -422,11 +438,8 @@ input:focus {
 body {
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
-  background: #f8f8f8;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
+  background-image:linear-gradient(white,lightblue);
+  }
 body * {
   box-sizing: inherit;
 }
@@ -473,7 +486,7 @@ h1 {
 }
 
 footer {
-  margin: 4em auto;
+ // margin: 4em auto;
   text-align: center;
   font-size: .9em;
 }
@@ -659,7 +672,7 @@ body {
   background: white;
 }
 .modal {
-    display: none; /* Hidden by default */
+    display:@CHARSET "UTF- none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     padding-top: 100px; /* Location of the box */
@@ -722,4 +735,42 @@ body {
 /*  Registration page */
 span.error{
 	color:red;
+}
+
+aside{
+ //background-color:skyblue;
+text-align:center;
+margin-left:25%;
+margin-right:25%;
+}
+table, td, th{
+border: 1px solid blue;
+margin:auto;
+
+}
+input.button
+{
+	width:10em;
+}
+input.number{
+opacity:0;
+background-color:lightblue;
+}
+html{
+height:150%;
+}
+table.main{
+		margin-left: 0%;
+	
+
+}
+article{
+position:absolute;
+}
+
+ div.table{
+position:absolute;
+float:right;
+margin-left:200%;
+maring-right:50%;
 }
