@@ -1,63 +1,3 @@
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>Login</title>
-	
-	<link rel="stylesheet" type="text/css" href="MyStyleA.css"/>
-	<script src = "validation.js" ></script>
-    
-</head>
-
-</header>
-<header>
-<img src="NIP.jpg" alt="Treee" style = "display:inline" width = "150" height = "150" />
-
-</header>
-
-<body>
-
-
-	<section>
-	
-		<h2 id = "testing">Login</h2>
-		<p>Welcome to NIP! Please login to make any purchases </p>
-		<br/>
-		<form id = "login" action="Login.php" method="post">
-			<table>				
-					<tr><td>Email: </td><td> <input type="text" id="email" name="email" size="30" /></td></tr>					
-				
-					<tr><td>Password: </td><td> <input type="password" id="password" name="password" size="30" /></td></tr>  			
-				
-			</table>	
-		
-		<br/>
-		<br/>
-		
-		<input class = "ordinaryLink submitButton" name="signIn" type = "submit" value = "Login"/>
-		
-		<p> No account? <a href="Registration.php">Sign up</a></p>
-	
-		</form>
-		<br/>
-		<br/>
-		<br/>
-	
-	</section>
-
-	
-	<hr/>
-	
-	
-
-	<script type = "text/javascript"  src = "validation.js" ></script>
-	<!--<footer><a href="AdministratorPage.html">  Administrator Page</a></footer> -->
-<footer> © Nature In a Pocket 2018 </footer>
-</body>
-</html>
-
 <?php
 $servername = "localhost";
 $username = "username";
@@ -73,6 +13,8 @@ $error = "";
 
 if (isset($_POST["signIn"]))
 {
+	if($_POST["check-me"] == 1) {
+	
 	$email = trim($_POST["email"]);
 	$password = trim($_POST["password"]);
 
@@ -122,6 +64,66 @@ if (isset($_POST["signIn"]))
 		$error = "The email/password combination was incorrect. Login failed.";
 		$db->close();
 	}
+	}
 }
-echo "$error";
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Login</title>
+	
+	<link rel="stylesheet" type="text/css" href="MyStyleA.css"/>
+	<script src = "validation.js" ></script>
+    
+</head>
+
+</header>
+<header>
+<img src="NIP.jpg" alt="Treee" style = "display:inline" width = "150" height = "150" />
+
+</header>
+
+<body>
+
+
+	<section>
+	
+		<h2 id = "testing">Login</h2>
+		<p>Welcome to NIP! Please login to make any purchases </p>
+		<br/>
+		<form id = "login" action="Login.php" method="post">
+			<table>		
+				<tr colspan="2"><td><?php echo $error;?></td></tr>
+					<tr><td>Email: </td><td> <input type="text" id="email" name="email" size="30" /></td></tr>					
+				
+					<tr><td>Password: </td><td> <input type="password" id="password" name="password" size="30" /></td></tr>  			
+				
+			</table>	
+		
+		<br/>
+		<br/>
+			<input type="hidden" name="check-me" id="check-me" value="1">
+		
+		<input class = "ordinaryLink submitButton" name="signIn" type = "submit" value = "Login"/>
+		
+		<p> No account? <a href="Registration.php">Sign up</a></p>
+	
+		</form>
+		<br/>
+		<br/>
+		<br/>
+	
+	</section>
+
+	
+	<hr/>
+	
+	
+
+	<script type = "text/javascript"  src = "validation.js" ></script>
+	<!--<footer><a href="AdministratorPage.html">  Administrator Page</a></footer> -->
+<footer> © Nature In a Pocket 2018 </footer>
+</body>
+</html>
+
