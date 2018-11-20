@@ -1,0 +1,54 @@
+
+
+create table user (
+fname varchar(255),
+lname varchar(255),
+email varchar(255),
+address varchar(255),
+password varchar(255),
+dob varchar(255),
+card int,
+expiry varchar(255),
+CVV int,
+Admin varchar(255),
+
+PRIMARY KEY (email)
+
+);
+
+
+create table Product
+(
+ProductTitle varchar(255),
+Category varchar(255),
+Quantity int,
+Price decimal (15,2),
+
+PRIMARY KEY (ProductTitle)
+
+
+);
+
+create table categories(
+categoryname varchar(255),
+
+PRIMARY KEY (categoryname)
+
+);
+
+
+create table cart(
+user varchar (255),
+ProductTitle varchar(255),
+Quantity int,
+Price decimal (15,2)
+
+);
+
+create table transactions(
+id int NOT NULL AUTO_INCREMENT,
+user varchar(255),
+Price decimal(15,2),
+Description varchar(255)
+
+);
