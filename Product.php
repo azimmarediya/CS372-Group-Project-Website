@@ -1,162 +1,776 @@
-<?php session_start();?>
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-table, th, td {
-    border: 1px solid black;
-}
-</style>
-<meta charset="UTF-8">
-<title>List of products</title>
-<link rel="stylesheet" href="MyStyleA.css" type="text/css" />
-</head>
-<body>
-<header class="login">
-<a href="Profile.php"> Profile</a><a href="Cart.php">  Cart</a>
-</header>
-<header>
-<img src="NIP.jpg" alt="Treee" style = "display:inline" width = "150" height = "150" />
-<p id="titl"><font size="+20">Welcome to Nature in a Pocket (NIP)'s website</font></p>
-</header>
-  
-  <div class="search-container">
-    <form action="/action_page.php">
-      <input type="text" placeholder="Search..." name="search">
-      <button type="submit">Submit</button>
-    </form>    
-  </div> 
+@charset "UTF-8";
 
-<div class="vertical-menu">
-  <a href="#" class="active">Category</a>
- <?php 		
-    // Create connection
-    $conn = new mysqli("localhost", "andriiev", "2006vA3", "andriiev");
-    // Check connection
-    if ($conn->connect_error) {
-    	die("Connection failed: " . $conn->connect_error);
-    }
-    
-    $sql = "SELECT Category FROM Categories";
+.login
+{
+	float: right;
+	
    
+}
+th{
+color: #777;
+}
+#titl
+{
+text-align:center;
+}
+.vertical-menu {
+    width: 200px;
+float:left;
+}
 
-		$result = $conn->query($sql);
-		
-		if ($result->num_rows > 0) {
-		   
-		    // output data of each row
-		    while($row = $result->fetch_assoc()) {
-		        echo "<a href='%'>" . $row["Category"]. "</a>";
-		    }
-		 
-		} else {
-		    echo "0 results";
-		}
-		
-		$conn->close();
-?>	
-</div>
-<form id = "login" action="Product.php" method="post">
-		<input type="hidden" name="submitted" value="1"/>
-<div class="wrapper" align="center">
-	<div class="desc">
-		<h1>Avalible product list</h1>		
-	</div>
+.vertical-menu th {
+    background-color: lightgreen;
+    color: blue;
+    //display: block;
+   // padding: 12px;
+    text-decoration: none;
+}
+.vertical-menu td{
+background-color:skyblue;
+}
+.vertical-menu input{
+background-color:skyblue;
+width:200px;
+}
 
-	<div class="content">
-		<!-- content here -->
-		<div class="product-grid product-grid--flexbox">
-			<div class="product-grid__wrapper">
-				<!-- Product list start here -->
-				
+.vertical-menu a:hover {
+    background-color: #ccc;
+}
 
-<?php 		
-    // Create connection
+.vertical-menu tr.active {
+    background-color: #4CAF50;
+    color: white;
+}
+tr.cat
+{
+background-color:skyblue;
+color:black;
+}
 
-    $conn = new mysqli("localhost", "andriiev", "2006vA3", "andriiev");
-    // Check connection
-    if ($conn->connect_error) {
-    	die("Connection failed: " . $conn->connect_error);
-    }
-    
-    $sql = "SELECT * FROM Product";
-    
+.search-container{
+  float: right;
+  padding: 6px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
 
-		$result = $conn->query($sql);
-		
-		if ($result->num_rows > 0) {
-		    echo "<table><tr><th>Id</th><th>Product Name</th><th>Category</th><th>Description</th><th>Quontity</th><th>Price</th></tr>";
-		    // output data of each row
-		    
-		    while($row = $result->fetch_assoc()) {
-				$di = $row["id"];
-		        echo "<tr><td>". $row["id"]. "</td><td>" . $row["ProductTitle"]. "</td><td>" . 
-		        $row["Category"]. "</td><td>" . $row["Description"]. "</td><td>". $row["Quontity"]. "</td><td>". $row["Price"]. "</td><td>".
-		        
-		         "<button id = $di onclick='AddCart(this.id)'>Add to Cart</button>"."</td><td>". 
-		         
-		        "<input id = '$di + 10' onsubmit ='return AddWish()' type='Submit' value='Add to Wish List'>"."</td></tr>" ;		        
-		       
-		    }
-		    echo "</table>";
-		} else {
-		    echo "0 results";
-		}
-		
-		$conn->close();
-	?>
-
-			
-			</div>		
-		</div>
-		
-	</div>
+.topnav .search-container button:hover {
+  background: #ccc;
+}
 
 
+.LIST
+{
+	text-align: center;	
+}
+
+section {
 	
-</div>
-</form>
-<footer>
-		Validate <a href="https://validator.w3.org/nu/?doc=http%3A%2F%2Furegina.ca%2F~martinsp%2F" class = "ordinaryLink">HTML5</a>
-	</footer>
+	padding: 20px;
+	margin-left: 15%;
+	margin-right: 20%;
+	padding-bottom: 50px;
+}
+.listprod
+{
+	text-align:center; 
+    margin-left:auto; 
+    margin-right:auto; 
+    width:100px;
+}
+#eco
+{
+	background-color: brown;
+	color: white;
+	margin: 80px auto;
+	width:300px;
+}
+.shopping-cart {
+  width: 750px;
+  height: 423px;
+  margin: 80px auto;
+ // background: skyblue;
+ 
+  border-radius: 6px;
+ 
+ 
+color:navy;
+}
+.title {
+  height: 60px;
+  border-bottom: 1px solid #E1E8EE;
+  padding: 20px 30px;
+  color: Light blue;
+  font-size: 18px;
+  font-weight: 400;
+}
+ 
+.item {
+  padding: 20px 30px;
+  height: 120px;
+  display: flex;
+}
+ 
+.item:nth-child(3) {
+  border-top:  1px solid #E1E8EE;
+  border-bottom:  1px solid #E1E8EE;
+}
+.buttons {
+  position: relative;
+  padding-top: 30px;
+  margin-right: 60px;
+}
+.delete-btn,
+.like-btn {
+  display: inline-block;
+  Cursor: pointer;
+}
+.delete-btn {
+  width: 18px;
+  height: 17px;
+  background: url(&quot;delete-icn.svg&quot;) no-repeat center;
+}
+ 
+.like-btn {
+  position: absolute;
+  top: 9px;
+  left: 15px;
+  background: url('twitter-heart.png');
+  width: 60px;
+  height: 60px;
+  background-size: 2900%;
+  background-repeat: no-repeat;
+}
+.is-active {
+  animation-name: animate;
+  animation-duration: .8s;
+  animation-iteration-count: 1;
+  animation-timing-function: steps(28);
+  animation-fill-mode: forwards;
+}
+ 
+@keyframes animate {
+  0%   { background-position: left;  }
+  50%  { background-position: right; }
+  100% { background-position: right; }
+}
+.image {
+  margin-right: 50px;
+}
+ 
+Letâ€™s add some basic style to  product name and description.
+.description {
+  padding-top: 10px;
+  margin-right: 60px;
+  width: 115px;
+}
+ 
+.description span {
+  display: block;
+  font-size: 14px;
+  color: #43484D;
+  font-weight: 400;
+}
+ 
+.description span:first-child {
+  margin-bottom: 5px;
+}
+.description span:last-child {
+  font-weight: 300;
+  margin-top: 8px;
+  color: #86939E;
+}
+.quantity {
+  padding-top: 20px;
+  margin-right: 60px;
+}
+.quantity input {
+  -webkit-appearance: none;
+  border: none;
+  text-align: center;
+  width: 32px;
+  font-size: 16px;
+  color: #43484D;
+  font-weight: 300;
+}
+ 
+button[class*=btn] {
+  width: 30px;
+  height: 30px;
+  background-color: #E1E8EE;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+.minus-btn img {
+  margin-bottom: 3px;
+}
+.plus-btn img {
+  margin-top: 2px;
+}
+ 
+button:focus,
+input:focus {
+  outline:0;
+}
+.total-price {
+  width: 83px;
+  padding-top: 27px;
+  text-align: center;
+  font-size: 16px;
+  color: #43484D;
+  font-weight: 300;
+}
+@media (max-width: 800px) {
+  .shopping-cart {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+  .item {
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .image img {
+    width: 50%;
+  }
+  .image,
+  .quantity,
+  .description {
+    width: 100%;
+    text-align: center;
+    margin: 6px 0;
+  }
+  .buttons {
+    margin-right: 20px;
+  }
+}
+.wrapper {
+	width: 68em;
+}
 
-<footer> © Nature In a Pocket 2018 </footer>
-<script type = "text/javascript"  src = "validation.js" ></script>
-</body>
-</html>
-<?php 	
-		    $x = intval($_POST['q']);
-		    
-			echo $x + "pizdets";
-			
-			$email = $_SESSION["email"];
-			$conn = new mysqli("localhost", "andriiev", "2006vA3", "andriiev");
-		
-			if ($conn->connect_error) {
-				die("Connection failed: " . $conn->connect_error);
-			}
-			
-			
-			$sql4 = "SELECT * FROM Product where id = '".$x."'";
-			
-			$result4 = $conn->query($conn,$sql4);
-		
-			$pr = $result4["ProductTitle"];
-			$Pc = $result4["Price"];
-		
-			$q2 = "insert into Cart (ProductName, price, email) values ('$pr', '$Pc', '$email')";
-			 
-		
-			$r2 = $conn->query($q2);
-			if ($r2 === true)
-			{
-				echo "product was addet to Cart";
-				$conn->close();
-				exit();
-		
-			}else { echo "shit happens here";}
-			
-		
+
+
+
+// Start here
+
+
+
+.shopping-cart {
+  width: 750px;
+  height: 423px;
+  margin: 80px auto;
+ // background: #FFFFFF;
+  box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.10);
+  border-radius: 6px;
+
+  display: flex;
+  flex-direction: column;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+.col-sm-3 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 25%;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.title {
+  height: 60px;
+  border-bottom: 1px solid #E1E8EE;
+  padding: 20px 30px;
+  color: #5E6977;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.item {
+  padding: 20px 30px;
+ 
+  height: 120px;
+  display: flex;
+}
+
+.item:nth-child(3) {
+  border-top:  1px solid #E1E8EE;
+  border-bottom:  1px solid #E1E8EE;
+  
+}
+
+/* Buttons -  Delete and Like */
+.buttons {
+  position: relative;
+  padding-top: 30px;
+  margin-right: 60px;
+}
+
+
+.is-active {
+  animation-name: animate;
+  animation-duration: .8s;
+  animation-iteration-count: 1;
+  animation-timing-function: steps(28);
+  animation-fill-mode: forwards;
+}
+
+@keyframes animate {
+  0%   { background-position: left;  }
+  50%  { background-position: right; }
+  100% { background-position: right; }
+}
+
+/* Product Image */
+.image {
+  margin-right: 50px;
+}
+
+/* Product Description */
+.description {
+  padding-top: 10px;
+  margin-right: 60px;
+  width: 115px;
+}
+
+.description span {
+  display: block;
+  font-size: 14px;
+  color: #43484D;
+  font-weight: 400;
+}
+
+.description span:first-child {
+  margin-bottom: 5px;
+}
+.description span:last-child {
+  font-weight: 300;
+  margin-top: 8px;
+  color: #86939E;
+}
+
+/* Product Quantity */
+.quantity {
+  padding-top: 20px;
+  margin-right: 60px;
+}
+.quantity input {
+ 
+  text-align: center;
+  width: 32px;
+  font-size: 16px;
+  color: #43484D;
+  font-weight: 300;
+}
+
+button[class*=btn] {
+  width: 30px;
+  height: 30px;
+  background-color: #E1E8EE;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+.minus-btn img {
+  margin-bottom: 1px;
+}
+.plus-btn img {
+  margin-top: 2px;
+}
+button:focus,
+input:focus {
+  outline:0;
+}
+
+/* Total Price */
+.total-price {
+  width: 83px;
+  padding-top: 27px;
+  text-align: right;
+  font-size: 16px;
+  color: #43484D;
+  font-weight: 300;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .shopping-cart {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+  .item {
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .image img {
+    width: 50%;
+  }
+  .image,
+  .quantity,
+  .description {
+    width: 100%;
+    text-align: center;
+    margin: 6px 0;
+  }
+  .buttons {
+    margin-right: 20px;
+  }
+}
+body {
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+  background-image:linear-gradient(white,lightblue);
+  }
+body * {
+  box-sizing: inherit;
+}
+
+.wrapper {
+  width: 40em;
+  margin: 4em auto;
+  background: #fff;
+  padding: 4em;
+  border-radius: 8px;
+  border: 1px solid #f5f5f5;
+}
+.wrapper > :first-child {
+  margin-top: 0;
+}
+.wrapper > :last-child {
+  margin-bottom: 0;
+}
+
+.desc {
+  margin: 4em auto;
+  font-size: 1.2em;
+}
+
+.todo {
+  background: #f9f9f9;
+  padding: 1em;
+  border-radius: 4px;
+  color: #ccc;
+  font-style: italic;
+  font-weight: lighter;
+  font-size: .9em;
+}
+.todo ul {
+  margin: .4em 0;
+  padding: 0 1em;
+}
+.todo ul li {
+  list-style-position: inside;
+}
+
+h1 {
+  margin: 0;
+}
+
+footer {
+ // margin: 4em auto;
+  text-align: center;
+  font-size: .9em;
+}
+
+a {
+  text-decoration: none;
+  color: #2196F3;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.emoticon-face {
+  background: #FFEB3B;
+  border-radius: 100%;
+  width: 1.7em;
+  height: 1.7em;
+  transform: rotate(90deg);
+  display: inline-block;
+  vertical-align: middle;
+  line-heigh: 1;
+  margin: -.4em .2em 0;
+  text-align: center;
+  border: 1px solid #FDD835;
+  padding-left: .1em;
+  -webkit-font-smoothing: antialiased;
+}
+.emoticon-face--no-rotation {
+  transform: rotate(0deg);
+}
+
+code {
+  padding: .2em .3em;
+  background: #f5f5f5;
+  margin: 0 .2em;
+  border-radius: 4px;
+  font-size: .95em;
+  font-family: 'Source Code Pro';
+}
+
+.tac {
+  text-align: center;
+}
+
+.wrapper {
+  width: 68em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #777;
+  font-family: 'Open Sans', Arial, sans-serif;
+}
+
+.product-grid {
+  width: 60em;
+  margin: 2rem auto;
+}
+.product-grid.product-grid--flexbox .product-grid__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+.product-grid.product-grid--flexbox .product-grid__title {
+  height: auto;
+}
+.product-grid.product-grid--flexbox .product-grid__title:after {
+  display: none;
+}
+.product-grid__wrapper {
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+.product-grid__product-wrapper {
+  padding: 1rem;
+  float: left;
+  width: 33.33333%;
+}
+.product-grid__product {
+  padding: 1rem;
+  position: relative;
+  cursor: pointer;
+  background: #fff;
+  border-radius: 4px;
+}
+.product-grid__product:hover {
+  box-shadow: 0px 0px 0px 1px #eee;
+  z-index: 50;
+}
+.product-grid__product:hover .product-grid__extend {
+  display: block;
+}
+.product-grid__img-wrapper {
+  width: 100%;
+  text-align: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  height: 150px;
+}
+.product-grid__img {
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+.product-grid__title {
+  margin-top: .875rem;
+  display: block;
+  font-size: 1.125em;
+  color: #222;
+  height: 3em;
+  overflow: hidden;
+  position: relative;
+}
+.product-grid__title:after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2.4em;
+  height: 1.5em;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%);
+}
+.product-grid__price {
+  color: #E91E63;
+  font-weight: bold;
+  letter-spacing: .4px;
+}
+.product-grid__extend-wrapper {
+  position: relative;
+}
+.product-grid__extend {
+  display: none;
+  position: absolute;
+  padding: 0 1rem 1rem 1rem;
+  margin: .4375rem -1rem 0;
+  box-shadow: 0px 0px 0px 1px #eee;
+  background: #fff;
+  border-radius: 0 0 4px 4px;
+}
+.product-grid__extend:before {
+  content: "";
+  height: .875rem;
+  width: 100%;
+  position: absolute;
+  top: -.4375rem;
+  left: 0;
+  background: #fff;
+}
+.product-grid__description {
+  font-size: .875em;
+  margin-top: .4375rem;
+  margin-bottom: 0;
+}
+.product-grid__btn {
+  display: inline-block;
+  font-size: .875em;
+  color: #777;
+  background: #eee;
+  padding: .5em .625em;
+  margin-top: .875rem;
+  margin-right: .625rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.product-grid__btn i.fa {
+  margin-right: .3125rem;
+}
+.product-grid__add-to-cart {
+  color: #fff;
+  background: #E91E63;
+}
+.product-grid__add-to-cart:hover {
+  background: #ee4c83;
+}
+.product-grid__view {
+  color: #777;
+  background: #eee;
+}
+.product-grid__view:hover {
+  background: white;
+}
+.modal {
+    display:@CHARSET "UTF- none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.modal2 {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close2 {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.close2:hover,
+.close2:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*  Registration page */
+span.error{
+	color:red;
+}
+
+aside{
+ //background-color:skyblue;
+text-align:center;
+margin-left:25%;
+margin-right:25%;
+}
+table, td, th{
+border: 1px solid blue;
+margin:auto;
+
+}
+input.button
+{
+	width:10em;
+}
+input.number{
+opacity:0;
+background-color:lightblue;
+}
+html{
+height:150%;
+}
+table.main{
+		margin-left: 0%;
 	
-		
-?>	
+
+}
+article{
+position:absolute;
+}
+
+ div.table{
+position:absolute;
+float:right;
+margin-left:200%;
+maring-right:50%;
+}
