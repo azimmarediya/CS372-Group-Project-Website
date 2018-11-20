@@ -13,12 +13,10 @@ $error = "";
 
 if (isset($_POST["signIn"]))
 {
-	if($_POST["check-me"] == 1) {
-	
 	$email = trim($_POST["email"]);
 	$password = trim($_POST["password"]);
 
-	$db = new mysqli($servername, $username, $password, $dbname);
+	$db = new mysqli("$servername", "$username", "$password", "$dbname");
 	if ($db->connect_error)
 	{
 		die ("Connection failed: " . $db->connect_error);
@@ -64,9 +62,10 @@ if (isset($_POST["signIn"]))
 		$error = "The email/password combination was incorrect. Login failed.";
 		$db->close();
 	}
-	}
 }
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,33 +79,31 @@ if (isset($_POST["signIn"]))
 
 </header>
 <header>
-<img src="NIP.jpg" alt="Treee" style = "display:inline" width = "150" height = "150" />
+<img src="NIP.png" alt="Treee" style = "display:inline" width = "150" height = "150" />
 
 </header>
 
 <body>
 
-
+<p id="titl"><font size="+20">Welcome to Nature in a Pocket (NIP)</font></p>
 	<section>
 	
 		<h2 id = "testing">Login</h2>
 		<p>Welcome to NIP! Please login to make any purchases </p>
 		<br/>
 		<form id = "login" action="Login.php" method="post">
-			<table>		
-				<tr colspan="2"><td><?php echo $error;?></td></tr>
+			<table class="main">				
 					<tr><td>Email: </td><td> <input type="text" id="email" name="email" size="30" /></td></tr>					
 				
 					<tr><td>Password: </td><td> <input type="password" id="password" name="password" size="30" /></td></tr>  			
 				
 			</table>	
-		
+			<?php echo "<span class='error'> " . $error . "</span>" ?>
 		<br/>
 		<br/>
-			<input type="hidden" name="check-me" id="check-me" value="1">
-		
+			
 		<input class = "ordinaryLink submitButton" name="signIn" type = "submit" value = "Login"/>
-		
+
 		<p> No account? <a href="Registration.php">Sign up</a></p>
 	
 		</form>
@@ -122,7 +119,7 @@ if (isset($_POST["signIn"]))
 	
 
 	<script type = "text/javascript"  src = "validation.js" ></script>
-	<!--<footer><a href="AdministratorPage.html">  Administrator Page</a></footer> -->
+
 <footer> © Nature In a Pocket 2018 </footer>
 </body>
 </html>
