@@ -4,7 +4,9 @@ $servername = "localhost";
 $username = "username";
 $password = "password";
 $dbname = "myDB";
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+
+$conn = mysqli_connect("$servername", "$username", "$password", "$dbname");
 $email = $_SESSION["email"];
   
 $sql = "SELECT email FROM user WHERE email='$email';"; 
@@ -31,9 +33,21 @@ $admin = "yes";
 ?>
 
 <?php
+// This part of the code will look after making a "cart counter" that shows how many things are in the cart
+
+$countsql = "SELECT * FROM cart WHERE user='$email';";
+$countres = $conn->query($countsql);
+$countnum = $countres->num_rows;
+
+
+?>
+
+
+
+<?php
 //this section is for moving the customers purchases from the product table to the cart table.  It uses a hidden value to track the product name and tracks the quantity value using php variables
  // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli("$servername", "$username", "$password", "$dbname");
     // Check connection
     if ($conn->connect_error) {
     	die("Connection failed: " . $conn->connect_error);
@@ -54,7 +68,7 @@ $qrow = $qcheck->fetch_assoc();
 $qres = $qrow["Quantity"];
 
 // This code is used to check that the product is not already in the cart
-$sqlcheck2 = "SELECT ProductTitle FROM cart WHERE ProductTitle='$pproduct' AND user='$email';";
+$sqlcheck2 = "SELECT ProductTitle, Quantity FROM cart WHERE ProductTitle='$pproduct' AND user='$email';";
 $ncheck = $conn->query($sqlcheck2);
 $nres = $ncheck->num_rows;
 
@@ -63,18 +77,37 @@ $nres = $ncheck->num_rows;
 if($pquantity<1)
 {
 $error = "Please specify a quantity";
-echo $error;
+//echo $error;
 }
 // need to check that the quantity selected is not greater than the amount in stock
 else if($pquantity > $qres)
 {
 $error ="There is not enough stock for this purchase.  Please select an amount lower than the available quantity";
-echo $error;
+//echo $error;
 }
 // need to check that the item is not already in the customers cart
 else if($nres > 0){
-$error = "This item is already in your cart.  Please first remove it to change your order";
-echo $error;
+//$error = "This item is already in your cart.  Please first remove it to change your order";
+//echo $error;
+
+$nres = $ncheck->fetch_assoc();
+$pquantitytotal = $pquantity + $nres["Quantity"];
+
+// Since the product was already in the cart, update the total amount in the cart 
+$sql = "Update cart SET Quantity = '$pquantitytotal' WHERE ProductTitle= '$pproduct';";
+if($conn->query($sql)===TRUE){
+$success = "Product added to cart";
+
+//adjust the quantity in the table to prevent other users from trying to purchase drugs we don't have.  
+$updateq = $qres - $pquantity;
+
+
+$altersql = "UPDATE Product SET Quantity='$updateq' WHERE ProductTitle='$pproduct';";
+$conn->query($altersql);
+
+}
+
+
 }
 
 else{
@@ -86,7 +119,7 @@ $pprice = $_POST["pcost"];
 $sql = "INSERT INTO cart values ('$email', '$pproduct', '$pquantity', '$pprice');";
 
 if($conn->query($sql)===TRUE){
-echo "Product added to cart";
+$success = "Product added to cart";
 
 //adjust the quantity in the table to prevent other users from trying to purchase drugs we don't have.  
 $updateq = $qres - $pquantity;
@@ -97,7 +130,7 @@ $conn->query($altersql);
 
 }
 else{
-echo "error";
+$error = "error";
 }
 }
 }
@@ -114,40 +147,45 @@ $conn->close();
 table, th, td {
     border: 1px solid black;
 }
+input{
+width:10em;
+}
 </style>
 <title>NIP Nature In a Pocket</title>
 <link rel="stylesheet" href="MyStyleA.css" type="text/css" />
 </head>
 <body>
 
+  <header class="login">
+ <a href="Cart.php"> Cart(<?php echo $countnum; ?>)</a> <?php if($admin == "yes"){echo "<a href='Admin.php' > Admin </a>";} ?> <a href="Logout.php"> Logout </a>
+</header>
 
 
 
 <header>
-<img src="NIP.jpg" alt="Treee" style = "display:inline" width = "150" height = "150" />
-<p id="titl"><font size="+20">Welcome to Nature in a Pocket (NIP)'s website</font></p>
+<img src="NIP.png" alt="Treee" style = "display:inline" width = "150" height = "150" />
+<p id="titl"><font size="+20">Welcome to Nature in a Pocket (NIP)</font></p>
 
 </header>
-  <header class="login">
- <a href="Cart.php"> Cart</a> <?php if($admin == "yes"){echo "<a href='Admin.php' > Admin </a>";} ?> <a href="Logout.php"> Logout </a>
-</header>
 
 
-
+<article>
 <div class="vertical-menu">
-  <a href="#" class="active">Category</a>
+<table class="vertical-menu">
 
-
-
+<tr> <th> <p class="active">Category</p></th> </tr>
+<form method="post" action="HomePage.php">
+<tr> <td> <input type="submit" name="search" value="All Categories"> </td> </tr>
+</form>
   <?php 		
     // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli("$servername", "$username", "$password", "$dbname");
     // Check connection
     if ($conn->connect_error) {
     	die("Connection failed: " . $conn->connect_error);
     }
     
-    $sql = "SELECT Category FROM Product";
+    $sql = "SELECT categoryname FROM categories;";
    
 
 		$result = $conn->query($sql);
@@ -156,7 +194,15 @@ table, th, td {
 		   
 		    // output data of each row
 		    while($row = $result->fetch_assoc()) {
-		        echo "<a href='%'>" . $row["Category"]. "</a>";
+echo "<form method='post' action='HomePage.php'>";
+		echo "<tr><td>";
+		
+		        echo "<input type='submit' name='search' value=\"$row[categoryname]\">";
+		
+		echo "</tr></td>";
+echo "</form>";
+//echo "<input type='hidden' value=\"$row[ProductTitle]\" name='pname'>";
+
 		    }
 		 
 		} else {
@@ -165,53 +211,119 @@ table, th, td {
 		
 		$conn->close();
 ?>	
+</table>
 </div>
 
 
 
 
-<div id ="home" class="LIST">
+<div class="table">
 <?php 		
     // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli("$servername", "$username", "$password", "$dbname");
     // Check connection
     if ($conn->connect_error) {
     	die("Connection failed: " . $conn->connect_error);
     }
-    
-    $sql = "SELECT ProductTitle, Category,  Quantity, Price FROM Product ORDER BY Category";
-   //   $sql = "SELECT * FROM PRODUCT";
- 
-		$result = $conn->query($sql);
-		
+// This section will handle the search function.  
+
+
+if(isset($_POST["search"])){
+$search = $_POST["search"];
+if($search != "All Categories"){
+	
+   $sql = "SELECT ProductTitle, Category,  Quantity, Price FROM Product WHERE Category='$search' ORDER BY Category";
+    $result = $conn->query($sql);
+
 		if ($result->num_rows > 0) {
 		// start the form and table
 		
-		    echo "<center><table><tr><th>Product Name</th><th>Category</th><th>Quantity</th><th>Price</th></tr>";
+		    echo "<center><table><tr><th>Product Name</th><th>Category</th><th>In Stock</th><th>Price</th><th> Select Quantity </th><th> Add to cart </th></tr>";
 		    // output data of each row
 		    while($row = $result->fetch_assoc()) {
 			echo "<form method='post' action='HomePage.php'>";
 		
 		        echo "<tr><td>" . $row["ProductTitle"]. "</td><td>" . $row["Category"]. "</td><td>" . $row["Quantity"]. "</td><td>" . $row["Price"] . "</td>";
 		
-			echo "<td><input type='number' value='0' name='pquantity'>";
-			echo " <input type='submit' value='add to cart'  name='purchase'>";
+			echo "<td><input  type='number' min='0' value='0' max=\"$row[Quantity]\" name='pquantity'>";
+			echo "<td> <input type='submit' value='add to cart'  name='purchase'></td>";
 			echo "<input type='hidden' value=\"$row[ProductTitle]\" name='pname'>";
 			echo "<input type='hidden' value=\"$row[Price]\" name='pcost'> </td></tr>";
 	echo "</form>";		
     }
 		    echo "</table></center>";
-		
+		    echo "<span style='color:red'> " . $error . "</span>";
+		    echo "<span style='color:green'> " . $success . "</span>";
 		} else {
 		    echo "0 results";
 		}
+}
+else{
+
+	   $sql = "SELECT ProductTitle, Category,  Quantity, Price FROM Product ORDER BY Category";
+    $result = $conn->query($sql);
+
 		
+		if ($result->num_rows > 0) {
+		// start the form and table
+		
+		    echo "<center><table><tr><th>Product Name</th><th>Category</th><th>In Stock</th><th>Price</th><th> Select Quantity </th><th> Add to cart </th></tr>";
+		    // output data of each row
+		    while($row = $result->fetch_assoc()) {
+			echo "<form method='post' action='HomePage.php'>";
+		
+		        echo "<tr><td>" . $row["ProductTitle"]. "</td><td>" . $row["Category"]. "</td><td>" . $row["Quantity"]. "</td><td>" . $row["Price"] . "</td>";
+		
+			echo "<td><input type='number' min='0' value='0' max=\"$row[Quantity]\" name='pquantity'>";
+			echo "<td> <input type='submit' value='add to cart'  name='purchase'></td>";
+			echo "<input type='hidden' value=\"$row[ProductTitle]\" name='pname'>";
+			echo "<input type='hidden' value=\"$row[Price]\" name='pcost'> </td></tr>";
+	echo "</form>";		
+    }
+		    echo "</table></center>";
+		    echo "<span style='color:red'> " . $error . "</span>";
+		    echo "<span style='color:green'> " . $success . "</span>";
+		} else {
+		    echo "0 results";
+		}
+	
+}
+}
+else if(!isset($POST["search"])){
+
+        $sql = "SELECT ProductTitle, Category,  Quantity, Price FROM Product ORDER BY Category";
+    $result = $conn->query($sql);
+
+		
+		if ($result->num_rows > 0) {
+		// start the form and table
+		
+		    echo "<center><table><tr><th>Product Name</th><th>Category</th><th>In Stock</th><th>Price</th><th> Select Quantity </th><th> Add to cart </th></tr>";
+		    // output data of each row
+		    while($row = $result->fetch_assoc()) {
+			echo "<form method='post' action='HomePage.php'>";
+		
+		        echo "<tr><td>" . $row["ProductTitle"]. "</td><td>" . $row["Category"]. "</td><td>" . $row["Quantity"]. "</td><td>" . $row["Price"] . "</td>";
+		
+			echo "<td><input type='number' min='0' value='0' max=\"$row[Quantity]\" name='pquantity'>";
+			echo "<td> <input type='submit' value='add to cart'  name='purchase'></td>";
+			echo "<input type='hidden' value=\"$row[ProductTitle]\" name='pname'>";
+			echo "<input type='hidden' value=\"$row[Price]\" name='pcost'> </td></tr>";
+	echo "</form>";		
+    }
+		    echo "</table></center>";
+		    echo "<span style='color:red'> " . $error . "</span>";
+		    echo "<span style='color:green'> " . $success . "</span>";
+		} else {
+		    echo "0 results";
+		}
+	}	
 		$conn->close();
 ?>
 </div>
 
-   
-<footer> © Nature In a Pocket 2018 </footer>
+   </article>
+
 <script type = "text/javascript"  src = "validation.js" ></script>
 </body>
 
