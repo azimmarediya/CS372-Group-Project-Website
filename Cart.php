@@ -3,7 +3,8 @@
 $username = "username";
 $password = "password";
 $dbname = "myDB";
-$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+$conn = mysqli_connect("$servername", "$username", "$password", "$dbname");
 $email = $_SESSION["email"];
   
 $sql = "SELECT email FROM user WHERE email='$email';"; 
@@ -20,7 +21,7 @@ exit();
 // This section of code checks for the users cart and provides information for later code
 // check for what the user has in their cart in the cart table by searching for any entries with their email.  
   // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli("$servername", "$username", "$password", "$dbname");
     // Check connection
     if ($conn->connect_error) {
     	die("Connection failed: " . $conn->connect_error);
@@ -34,7 +35,7 @@ $result = $conn->query($sql);
 <?php
 
 // this section of php code handles deleting an object from the cart based on the hidden field in the table
- $conn = new mysqli($servername, $username, $password, $dbname);
+ $conn = new mysqli("$servername", "$username", "$password", "$dbname");
     // Check connection
     if ($conn->connect_error) {
     	die("Connection failed: " . $conn->connect_error);
@@ -87,7 +88,7 @@ $conn->close();
 // This section assembles a string of the products and quantities for the finished transaction table.
 $productString = "";
 	
- $conn = new mysqli($servername, $username, $password, $dbname);
+ $conn = new mysqli("$servername", "$username", "$password", "$dbname");
     // Check connection
     if ($conn->connect_error) {
     	die("Connection failed: " . $conn->connect_error);
@@ -129,8 +130,8 @@ $conn->close();
 <a href="HomePage.php"> Home Page    </a>  <a href="Logout.php"> Logout </a>
 </header>
 <header>
-<img src="NIP.jpg" alt="Treee" style = "display:inline" width = "150" height = "150" />
-<p id="titl"><font size="+20">Welcome to Nature in a Pocket (NIP)'s website</font></p>
+<a href="HomePage.php"><img src="NIP.png" alt="Treee" style = "display:inline" width = "150" height = "150" /></a>
+<p id="titl"><font size="+20">Welcome to Nature in a Pocket (NIP)</font></p>
 </header>
 <div class="shopping-cart">
 <?php
@@ -141,7 +142,7 @@ $conn->close();
 if ($result->num_rows > 0) {
     // if yes, output the users cart
 	$subtotal = 0;
-	echo "<table> <tr> <td> Product Name </td> <td> Quantity </td> <td> Price Per Unit </td><td>Price for all </td></tr>";
+	echo "<table> <tr> <td> Product Name </td> <td> Quantity </td> <td> Price Per Unit </td><td>Price for all </td><td>Remove from cart </td></tr>";
     while($row = $result->fetch_assoc()) {
 	// each row is a form with a hidden field that allows for the removal of a product from the cart
 	echo "<form method='post' action='Cart.php'>";
@@ -154,11 +155,11 @@ if ($result->num_rows > 0) {
 	echo "<td>" . $rowprice . "</td>";
 
 	echo "<td><input type='submit' value='remove from cart' name='rcart'></td>";
-	echo "<input type='hidden' value=\"$row[ProductTitle]\" name='pname'> </td> ";
-	echo "<td><input type='hidden' value=\"$row[Quantity]\" name='pquantity'></td></tr>";
+	echo "<input type='hidden' value=\"$row[ProductTitle]\" name='pname'>  ";
+	echo "<input type='hidden' value=\"$row[Quantity]\" name='pquantity'></tr>";
 	echo "</form>";
     }
-echo "</table><br>";
+echo "</table>";
 echo "Subtotal: $" . $subtotal;
 
 echo "<form method='post' action='Cart.php'>";
@@ -196,7 +197,7 @@ $conn->close();
 // This section of code completes the transaction.  It needs to add the cart info to the transaction table, delete the users cart, and email notify the user of the transaction succeeding via email
 //if the user clicks purchase
 if(isset($_POST["purchase"])){
- $conn = new mysqli($servername, $username, $password, $dbname);
+ $conn = new mysqli("$servername", "$username", "$password", "$dbname");
     // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -222,7 +223,7 @@ $emptyResult = $conn->query($delete);
 //$msg = wordwrap($msg,70);
 
 // send email
-//mail("blewedev@uregina.ca","My subject",$msg);
+//mail("$dbname@uregina.ca","My subject",$msg);
 // redirect
 
 header('Location: Confirm.php');
